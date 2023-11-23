@@ -6,11 +6,11 @@ image:
   ##
   ## note: images in the official repository, don't contain the necessary dependencies to support many of the features
   ## exposed by this chart (e.g. postgresql uri, s3, prometheus metrics etc.) so build your own images as necessary
-  repository: ghcr.io/mlflow/mlflow
+  repository: stadgent/probe-mlflow
   ## mlflow image tag
-  tag: v2.8.0
+  tag: latest
   ## image pull policy
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   ## private registry image pull secrets
   pullSecrets: []
     # - name: <secret-name>
