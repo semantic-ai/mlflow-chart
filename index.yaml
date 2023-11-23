@@ -3,6 +3,17 @@ entries:
   mlflow:
   - apiVersion: v2
     appVersion: 2.8.0
+    created: "2023-11-23T10:47:12.447962095Z"
+    description: A Helm chart for MLflow
+    digest: 7d94e5f81b069b32dfdb0870be3ccc54d17f708f57228c19b58ff51b6bdc30fa
+    kubeVersion: '>= 1.19.0'
+    name: mlflow
+    type: application
+    urls:
+    - https://github.com/semantic-ai/mlflow-chart/releases/download/mlflow-0.1.2/mlflow-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: 2.8.0
     created: "2023-11-23T09:18:39.75568841Z"
     description: A Helm chart for MLflow
     digest: 928941007979d36bf9068b69495c0aabb2fd932473ff062dded944738d72373d
@@ -12,4 +23,4 @@ entries:
     urls:
     - https://github.com/semantic-ai/mlflow-chart/releases/download/mlflow-0.1.1/mlflow-0.1.1.tgz
     version: 0.1.1
-generated: "2023-11-23T09:18:39.755697597Z"
+generated: "2023-11-23T10:47:12.447974368Z"
