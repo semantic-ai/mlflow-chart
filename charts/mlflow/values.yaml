@@ -1,0 +1,190 @@
+nameOverride: ""
+fullnameOverride: ""
+
+image:
+  ## mlflow image repository
+  ##
+  ## note: images in the official repository, don't contain the necessary dependencies to support many of the features
+  ## exposed by this chart (e.g. postgresql uri, s3, prometheus metrics etc.) so build your own images as necessary
+  repository: ghcr.io/mlflow/mlflow
+  ## mlflow image tag
+  tag: v2.8.0
+  ## image pull policy
+  pullPolicy: IfNotPresent
+  ## private registry image pull secrets
+  pullSecrets: []
+    # - name: <secret-name>
+
+## the container port that the mlflow server listens on
+containerPort: 5000
+
+## override the default number of workers (4)
+workers: ""
+
+## enable prometheus metrics at /metrics
+metrics: false
+
+## uri to persist experiment and run data; either a sqlalchemy-compatible database connection string
+## (e.g. "sqlite:///path/to/file.db") or a local filesystem uri (e.g. "file:///absolute/path/to/directory");
+## by default, data will be logged to ./mlruns directory
+##
+## If secrets are involved, set the environment variable MLFLOW_BACKEND_STORE_URI using envSecrets instead.
+## For a list of supported environment variables, see https://www.mlflow.org/docs/latest/cli.html#mlflow-server
+backendStoreUri: ""
+
+## default location to store artifacts for any new experiments created. By default, data will be logged to the
+## mlflow-artifacts:/ uri proxy if artifacts.serve is enabled; otherwise, the default will be ./mlruns directory
+defaultArtifactRoot: ""
+
+artifacts:
+  ## disable experiment tracking feature; if true, configures the mlflow server to be used only for proxied artifact serving
+  only: false
+
+  ## enables serving of artifact upload, download and list requests by routing these requests to the storage location
+  ## that is specified by artifacts.destination directly through a proxy
+  serve: false
+
+  ## when serve is enabled, the base artifact location from which to resolve artifact upload/download/list requests,
+  ## when artifact root location is an http(s) or mlflow-artifacts:/ uri. Defaults to a local ./mlartifacts directory
+  destination: ""
+
+  # note: if the configured backend requires additional authentication through environment variables, the user is
+  # responsible for setting that up using env/envConfigMaps/envSecrets and/or using volumes/volumeMounts.
+
+## Experimental authentication module
+auth:
+  enabled: false
+
+  ## Same format as backendStoreUri but must be a different database.
+  ## If secrets are preferred then MLFLOW_AUTH_DATABASE_URI must be set instead.
+  databaseUri: ""
+  
+  ## Admin user is first created when initializing the auth database.
+  ## If you want to use secrets instead, use envSecrets with env variables MLFLOW_AUTH_ADMIN_USERNAME AND MLFLOW_AUTH_ADMIN_PASSWORD
+  admin:
+    username:
+    password:
+
+## Additional environment variables to set for the mlflow container. See
+## https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container/
+env: []
+  # - name: ENV_ONE
+  #   value: "one"
+  # - name: ENV_TWO
+  #   value: "two"
+
+## Additional environment variables can be retrieved and set from ConfigMaps. See:
+## https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#configure-all-key-value-pairs-in-a-configmap-as-container-environment-variables
+envConfigMaps: []
+  # - name: my-config-map
+
+## Additional environment variables can be retrieved and set from Secrets. See:
+## https://kubernetes.io/docs/tasks/inject-data-application/distribute-credentials-secure/#configure-all-key-value-pairs-in-a-secret-as-container-environment-variables
+envSecrets: []
+  # - name: my-secret
+
+## Additional volumes that should be included. See:
+## https://kubernetes.io/docs/concepts/storage/volumes/
+volumes: []
+  # - name: my-volume
+  #   configMap: my-config-map
+
+## Additional volume mounts that should be included. See:
+## https://kubernetes.io/docs/concepts/storage/volumes/
+volumeMounts: []
+  # - name: my-volume
+  #   mountPath: /opt/auth
+
+## Additional labels that should be included on the deployment. See:
+## https://kubernetes.io/docs/concepts/overview/working-with-objects/labels
+deploymentLabels: {}
+  # my-label-key: my-label-value
+
+## Additional labels that should be included on the pod. See:
+## https://kubernetes.io/docs/concepts/overview/working-with-objects/labels
+podLabels: {}
+  # my-label-key: my-label-value
+
+## number of mlflow server replicas to deploy
+replicaCount: 1
+
+serviceAccount:
+  ## Specifies whether a service account should be created
+  create: true
+  ## Annotations to add to the service account
+  annotations: {}
+  ## The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# TODO Add proper support for LoadBalancer service type
+service:
+  type: ClusterIP
+  port: 80
+  ## Specify the nodePort value for the NodePort service type; value ignored otherwise
+  nodePort: ~
+  annotations: {}
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  host: ""
+
+  ## Default path for the ingress record
+  ## Note: Some ingress controllers may only support "/", whereas others may need "/*".
+  path: "/*"
+  pathType: ImplementationSpecific
+  tls:
+    enabled: false
+    secretName: ""
+
+  ## An array with additional arbitrary paths that may need to be added to the ingress under the main host.
+  extraPaths: []
+    # - path: "/*"
+    #   backend:
+    #     service:
+    #       name: ssl-redirect
+    #       port:
+    #         name: use-annotation
+
+resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  ## see https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale-walkthrough/
+  metrics: []
+    # - type: Resource
+    #   resource:
+    #     name: cpu
+    #     target:
+    #       type: Utilization
+    #       averageUtilization: 60
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

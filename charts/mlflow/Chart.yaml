@@ -1,0 +1,7 @@
+apiVersion: v2
+name: mlflow
+description: A Helm chart for MLflow
+type: application
+version: 0.1.0
+appVersion: 2.8.0
+kubeVersion: ">= 1.19.0"
