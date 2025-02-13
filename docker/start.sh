@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Set up auth config
-tee /usr/local/lib/python3.11/site-packages/mlflow/server/auth/basic_auth.ini > /dev/null << EOF
+tee /usr/local/lib/python3.12/site-packages/mlflow/server/auth/basic_auth.ini > /dev/null << EOF
 [mlflow]
 default_permission = READ
 database_uri = $MLFLOW_AUTH_DATABASE_URI
