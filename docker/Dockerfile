@@ -7,9 +7,12 @@ WORKDIR /usr/src/app
 # Apply all available Debian security patches and install the MSSQL driver.
 # curl is only needed to fetch the Microsoft repo config and is purged afterwards
 # (this also removes libbrotli1 and libgnutls30t64, which only curl pulls in).
+# libgssapi-krb5-2 is installed explicitly: libmsodbcsql links against
+# libgssapi_krb5.so.2 but msodbcsql18 does not declare it, so without this the
+# curl purge autoremoves it and the driver fails to load ("Can't open lib").
 RUN apt-get update && \
     apt-get upgrade -y --no-install-recommends && \
-    apt-get install -y --no-install-recommends unixodbc curl ca-certificates && \
+    apt-get install -y --no-install-recommends unixodbc libgssapi-krb5-2 curl ca-certificates && \
     curl -fsSL -o /tmp/packages-microsoft-prod.deb \
         "https://packages.microsoft.com/config/debian/$(. /etc/os-release && echo $VERSION_ID)/packages-microsoft-prod.deb" && \
     dpkg -i /tmp/packages-microsoft-prod.deb && \
